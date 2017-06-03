@@ -8,6 +8,22 @@ import java.util.List;
 
 public class MovieWrapper {
 
-    List<Movie> movieList;
-    int totalPages;
+    private List<Movie> movieList;
+    private int totalPages;
+
+    public List<Movie> getMovieList() {
+        return movieList;
+    }
+
+    public void setMovieList(List<Movie> movieList) {
+        this.movieList = movieList;
+    }
+
+    public int getTotalPages() {
+        return totalPages;
+    }
+
+    public void setTotalPages(int totalPages) {
+        this.totalPages = totalPages;
+    }
 }

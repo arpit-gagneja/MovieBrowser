@@ -2,11 +2,7 @@ package com.example.arpit.moviebrowser.ui;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -20,17 +16,18 @@ import com.example.arpit.moviebrowser.MovieListConstants;
 import com.example.arpit.moviebrowser.R;
 import com.example.arpit.moviebrowser.api.HttpClient;
 import com.example.arpit.moviebrowser.model.Movie;
+import com.example.arpit.moviebrowser.model.MovieWrapper;
 import com.example.arpit.moviebrowser.ui.adapter.MovieListAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MovieListActivity extends AppCompatActivity {
 
     private int pageNumber = 1;
+    private int maxPageNumber = Integer.MAX_VALUE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +52,9 @@ public class MovieListActivity extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pageNumber++;
+                if (pageNumber < maxPageNumber) {
+                    pageNumber++;
+                }
                 getMovieList(context, moviesListView, pageNumber);
             }
         });
@@ -74,7 +73,9 @@ public class MovieListActivity extends AppCompatActivity {
                         String jsonResponse = response.toString();
                         JsonParser parser = new JsonParser();
                         try {
-                            List<Movie> movieList = parser.getMovieList(jsonResponse);
+                            MovieWrapper wrapper = parser.getMovieResultWrapper(jsonResponse);
+                            List<Movie> movieList = wrapper.getMovieList();
+                            maxPageNumber = wrapper.getTotalPages();
                             MovieListAdapter movieListAdapter = new MovieListAdapter(context, movieList);
                             moviesListView.setAdapter(movieListAdapter);
                         } catch (JSONException e) {

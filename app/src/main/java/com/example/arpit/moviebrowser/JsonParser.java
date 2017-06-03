@@ -1,6 +1,7 @@
 package com.example.arpit.moviebrowser;
 
 import com.example.arpit.moviebrowser.model.Movie;
+import com.example.arpit.moviebrowser.model.MovieWrapper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,10 +16,11 @@ import java.util.List;
 
 public class JsonParser {
 
-    public List<Movie> getMovieList(String inputJSON) throws JSONException {
+    public MovieWrapper getMovieResultWrapper(String inputJSON) throws JSONException {
         JSONObject topObject = new JSONObject(inputJSON);
 
         JSONArray results = (JSONArray) topObject.get("results");
+        int totalPages = topObject.getInt("total_pages");
 
         List<Movie> movieList = new ArrayList<>();
 
@@ -32,6 +34,10 @@ public class JsonParser {
             movieList.add(m);
         }
 
-        return movieList;
+        MovieWrapper wrapper = new MovieWrapper();
+        wrapper.setMovieList(movieList);
+        wrapper.setTotalPages(totalPages);
+
+        return wrapper;
     }
 }
